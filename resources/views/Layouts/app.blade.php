@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -27,6 +27,7 @@
             margin-left: 290px;
             flex: 1;
             padding: 40px;
+            min-height: 100vh;
         }
 
         .logo {
@@ -43,6 +44,7 @@
             text-decoration: none;
             border-radius: 8px;
             margin-bottom: 5px;
+            transition: all 0.2s;
         }
 
         .nav-link:hover,
@@ -67,11 +69,20 @@
             margin-bottom: 30px;
         }
 
+        .search-form {
+            position: relative;
+        }
+
         .search {
             padding: 10px 20px;
             width: 300px;
             border-radius: 25px;
             border: 1px solid #e2e8f0;
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #0d9488;
         }
 
         .btn-logout {
@@ -81,6 +92,15 @@
             cursor: pointer;
             padding: 12px;
             font-weight: bold;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .btn-logout:hover {
+            background: #fef2f2;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -89,26 +109,38 @@
     <div class="sidebar">
         <div class="logo">LAB-CHECK</div>
         <nav>
-            <a href="/dashboard" class="nav-link active">Home</a>
-            <a href="#" class="nav-link">Experiments</a>
-            <a href="#" class="nav-link">Catalog</a>
+            {{-- Using Request::is to highlight active links --}}
+            <a href="{{ url('/dashboard') }}" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">Home</a>
+            <a href="{{ url('/experiments') }}" class="nav-link {{ Request::is('experiments*') ? 'active' : '' }}">Experiments</a>
+            <a href="{{ url('/catalog') }}" class="nav-link {{ Request::is('catalog*') ? 'active' : '' }}">Catalog</a>
 
             @if (Auth::user()->role == 'admin' || Auth::user()->role == 'staff')
                 <div class="staff-label">Staff Features</div>
-                <a href="/equipment" class="nav-link">Equipment Management</a>
-                <a href="/inventory" class="nav-link">Inventory Control</a>
+                <a href="{{ url('/equipment-management') }}" class="nav-link {{ Request::is('equipment-management*') ? 'active' : '' }}">Equipment Management</a>
+                <a href="{{ url('/inventory-control') }}" class="nav-link {{ Request::is('inventory-control*') ? 'active' : '' }}">Inventory Control</a>
             @endif
 
-            <a href="#" class="nav-link">Settings</a>
-            <button class="btn-logout">Log out</button>
+            <a href="{{ url('/settings') }}" class="nav-link {{ Request::is('settings*') ? 'active' : '' }}">Settings</a>
+
+            {{-- Logout must be a POST form for Laravel security --}}
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn-logout">Log out</button>
+            </form>
         </nav>
     </div>
 
     <div class="main-wrapper">
         <div class="header">
-            <h2 style="margin: 0;">Good day, {{ Auth::user()->name ?? 'User' }}</h2>
-            <input type="text" class="search" placeholder="Find a chemical...">
+            {{-- Changed 'name' to 'full_name' to match your database --}}
+            <h2 style="margin: 0; color: #1e293b;">Good day, {{ Auth::user()->full_name }}</h2>
+            
+            <form action="{{ url('/catalog') }}" method="GET" class="search-form">
+                <input type="text" name="search" class="search" placeholder="Find a chemical..." value="{{ request('search') }}">
+            </form>
         </div>
+
+        {{-- Dynamic content from other pages injected here --}}
         @yield('content')
     </div>
 </body>
