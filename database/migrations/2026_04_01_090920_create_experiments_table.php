@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('category');
             $table->enum('difficulty', ['easy', 'medium', 'hard']);
             $table->integer('duration_minutes');
-            $table->json('procedure_steps');
+            $table->text('description');
             $table->timestamps();
         });
     }

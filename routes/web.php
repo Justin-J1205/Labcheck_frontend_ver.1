@@ -7,59 +7,24 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Equipment;
+use App\Http\Controllers\ChemicalController;
 use App\Models\Chemical;
 use App\Models\Experiment;
+use App\Models\Announcement;
 
-// --- 1. HOME & AUTH ---
-Route::get('/', function () {
-    return view('welcome');
-});
 
-// Login
-Route::get('/login', function () {
-    return view('Authentication.login');
-})->name('login');
 
+// --- 1. AUTHENTICATION ---
+Route::get('/', fn() => view('welcome'));
+Route::get('/login', fn() => view('Authentication.login'))->name('login');
 Route::post('/login', function (Request $request) {
-    $credentials = $request->validate([
-        'email' => ['required', 'email'],
-        'password' => ['required'],
-    ]);
-
+    $credentials = $request->validate(['email' => 'required|email', 'password' => 'required']);
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
         return redirect()->intended('dashboard');
     }
     return back()->withErrors(['email' => 'Invalid credentials.']);
 });
-
-// Register
-Route::get('/register', function () {
-    return view('Authentication.register');
-})->name('register');
-
-Route::post('/register', function (Request $request) {
-    $request->validate([
-        'full_name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'date_of_birth' => 'required|date',
-        'role' => 'required|in:student,admin,staff',
-        'password' => 'required|min:8|confirmed',
-    ]);
-
-    $user = User::create([
-        'full_name' => $request->full_name,
-        'email' => $request->email,
-        'date_of_birth' => $request->date_of_birth,
-        'role' => $request->role,
-        'password' => Hash::make($request->password),
-    ]);
-
-    Auth::login($user);
-    return redirect('/dashboard');
-});
-
-// Logout
 Route::post('/logout', function (Request $request) {
     Auth::logout();
     $request->session()->invalidate();
@@ -67,53 +32,84 @@ Route::post('/logout', function (Request $request) {
     return redirect('/');
 })->name('logout');
 
-
-// --- 2. PROTECTED DASHBOARD & FEATURES ---
+// --- 2. PROTECTED ROUTES ---
 Route::middleware(['auth'])->group(function () {
 
-    // Main Dashboard (The page in your screenshot)
+    // DASHBOARD
     Route::get('/dashboard', function () {
         $availableCount = Equipment::where('status', 'available')->count();
         $inUseCount = Equipment::whereIn('status', ['maintenance', 'occupied'])->count();
         $experiments = Experiment::all();
-        
-        return view('dashboard', compact('availableCount', 'inUseCount', 'experiments'));
+        $announcements = Announcement::orderBy('created_at', 'desc')->get();
+        $schedules = DB::table('schedules')->where('user_id', Auth::id())->get();
+
+        return view('dashboard', compact('availableCount', 'inUseCount', 'experiments', 'announcements', 'schedules'));
     })->name('dashboard');
 
-    // Experiments Page
-    Route::get('/experiments', function () {
-        $experiments = Experiment::all();
-        return view('experiments.index', compact('experiments'));
-    })->name('experiments.index');
+    // ANNOUNCEMENTS
+    Route::post('/announcements', function (Request $request) {
+        $request->validate(['title' => 'required', 'content' => 'required', 'target' => 'required']);
+        Announcement::create(['title' => $request->title, 'content' => $request->content, 'target' => $request->target, 'user_id' => Auth::id()]);
+        return redirect()->back();
+    })->name('announcements.store');
 
-    // Catalog (Chemicals View)
-    Route::get('/catalog', function (Request $request) {
-        $query = Chemical::query()->with('stock');
-        
-        // Search functionality for the top-right search bar
-        if ($request->has('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('formula', 'like', '%' . $request->search . '%');
-        }
-
-        $chemicals = $query->get();
-        return view('catalog.index', compact('chemicals'));
-    })->name('catalog.index');
-
-    // --- STAFF ONLY FEATURES ---
-    Route::get('/equipment-management', function () {
+    Route::delete('/announcements/{announcement}', function (Announcement $announcement) {
         if (Auth::user()->role === 'student') abort(403);
-        $equipment = Equipment::all();
-        return view('staff.equipment', compact('equipment'));
-    });
+        $announcement->delete();
+        return redirect()->back();
+    })->name('announcements.destroy');
 
-    Route::get('/inventory-control', function () {
+    // EXPERIMENTS
+    Route::get('/experiments', fn() => view('experiments.index', ['experiments' => Experiment::all()]))->name('experiments.index');
+    Route::get('/experiments/create', fn() => Auth::user()->role === 'student' ? abort(403) : view('experiments.create'))->name('experiments.create');
+    Route::get('/experiments/{experiment}', fn(Experiment $experiment) => view('experiments.show', compact('experiment')))->name('experiments.show');
+
+    Route::post('/experiments', function (Request $request) {
         if (Auth::user()->role === 'student') abort(403);
-        $chemicals = Chemical::with('stock')->get();
-        return view('staff.inventory', compact('chemicals'));
-    });
+        $validated = $request->validate([
+            'title' => 'required',
+            'category' => 'required',
+            'difficulty' => 'required',
+            'duration_minutes' => 'required|integer',
+            'description' => 'required'
+        ]);
+        Experiment::create($validated);
+        return redirect()->route('experiments.index');
+    })->name('experiments.store');
 
-    Route::get('/settings', function () {
-        return view('settings');
-    });
+    Route::delete('/experiments/{experiment}', function (Experiment $experiment) {
+        if (Auth::user()->role === 'student') abort(403);
+        $experiment->delete();
+        return redirect()->route('experiments.index');
+    })->name('experiments.destroy');
+
+    Route::post('/experiments/{experiment}/join', function (Experiment $experiment) {
+        if (Auth::user()->role !== 'student') return back();
+        DB::table('schedules')->insert([
+            'user_id' => Auth::id(),
+            'title' => '🔬 ' . $experiment->title,
+            'description' => $experiment->category,
+            'scheduled_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        return redirect()->route('dashboard');
+    })->name('experiments.join');
+    // EQUIPMENTS
+
+    Route::get('/equipment/create', function () {
+        return view('Equipments.create'); // Make sure this folder/file exists!
+    })->name('equipment.create');
+    Route::patch('/catalog/{chemical}/toggle', [ChemicalController::class, 'toggle'])->name('catalog.toggle');
+    Route::get('/equipment', function () {
+        $equipments = Equipment::all(); // Added the 's'
+        return view('Equipments.index', compact('equipments')); // Added the 's'
+    })->name('equipment.index');
+
+    // CATALOG
+    Route::patch('/catalog/{chemical}/toggle', [ChemicalController::class, 'toggleStatus'])->name('catalog.toggle');
+    Route::get('/catalog', [ChemicalController::class, 'index'])->name('catalog.index');
+    Route::get('/catalog/create', [ChemicalController::class, 'create'])->name('catalog.create');
+    Route::post('/catalog/store', [ChemicalController::class, 'store'])->name('catalog.store');
+    Route::delete('/catalog/{chemical}', [ChemicalController::class, 'destroy'])->name('catalog.destroy');
 });

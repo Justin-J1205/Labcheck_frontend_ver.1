@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('date_of_birth'); // Custom
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['student', 'admin'])->default('student'); // Custom
+            $table->enum('role', ['student', 'staff', 'admin'])->default('student'); // Custom
             $table->rememberToken();
             $table->timestamps();
         });
