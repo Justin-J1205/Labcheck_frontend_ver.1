@@ -12,4 +12,9 @@ class Announcement extends Model
         'target',
         'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

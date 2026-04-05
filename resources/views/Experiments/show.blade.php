@@ -27,14 +27,56 @@
                 </div>
             </div>
 
-            <h3 style="font-size: 18px; margin-bottom: 12px; color: #334155;">Detailed Description</h3>
-            <p style="line-height: 1.8; color: #475569; white-space: pre-line; font-size: 16px;">
+            {{-- NEW: Requirements Section --}}
+            <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 40px; border-top: 1px solid #f1f5f9; padding-top: 30px;">
+                {{-- Equipment List --}}
+                <div>
+                    <h4
+                        style="font-size: 14px; color: #0d9488; font-weight: 800; margin-bottom: 15px; text-transform: uppercase;">
+                        🔬 Equipment</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        @forelse($experiment->equipments as $equipment)
+                            <li
+                                style="font-size: 15px; color: #475569; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                                <span>{{ $equipment->name }}</span>
+                                <strong style="color: #1e293b;">x{{ $equipment->pivot->quantity_needed }}</strong>
+                            </li>
+                        @empty
+                            <li style="font-size: 14px; color: #94a3b8; font-style: italic;">No specific equipment listed.
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+
+                {{-- Chemical List --}}
+                <div>
+                    <h4
+                        style="font-size: 14px; color: #0d9488; font-weight: 800; margin-bottom: 15px; text-transform: uppercase;">
+                        🧪 Chemicals</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        @forelse($experiment->chemicals as $chemical)
+                            <li
+                                style="font-size: 15px; color: #475569; margin-bottom: 8px; display: flex; justify-content: space-between;">
+                                <span>{{ $chemical->name }}</span>
+                                <strong style="color: #1e293b;">{{ $chemical->pivot->amount_needed }}
+                                    {{ $chemical->unit }}</strong>
+                            </li>
+                        @empty
+                            <li style="font-size: 14px; color: #94a3b8; font-style: italic;">No chemicals required.</li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="font-size: 18px; margin-bottom: 12px; color: #334155; font-weight: 700;">Detailed Description</h3>
+            <p style="line-height: 1.8; color: #475569; white-space: pre-line; font-size: 16px; margin-bottom: 40px;">
                 {{ $experiment->description }}
             </p>
 
             {{-- Student Join Button --}}
             @if (Auth::user()->role === 'student')
-                <form action="{{ route('experiments.join', $experiment->id) }}" method="POST" style="margin-top: 40px;">
+                <form action="{{ route('experiments.join', $experiment->id) }}" method="POST">
                     @csrf
                     <button type="submit"
                         style="width: 100%; padding: 18px; background: #3b82f6; color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);">

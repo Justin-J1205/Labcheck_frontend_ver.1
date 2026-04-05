@@ -1,38 +1,57 @@
+<?php
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Announcement;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AnnouncementController extends Controller
 {
-public function store(Request $request)
-{
-$request->validate([
-'title' => 'required|string|max:255',
-'content' => 'required|string',
-'target' => 'required|in:all,student,staff',
-]);
+    /**
+     * Store a newly created announcement in storage.
+     * Triggered by the '+ New Announcement' modal on your dashboard.
+     */
+    public function store(Request $request)
+    {
+        // 1. Security Check: Only Staff can post
+        if (Auth::user()->role === 'student') {
+            abort(403, 'Students cannot post announcements.');
+        }
 
-Announcement::create([
-'title' => $request->title,
-'content' => $request->content,
-'target' => $request->target,
-'user_id' => Auth::id(),
-]);
+        // 2. Validation
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'target' => 'required|in:all,student,staff',
+        ]);
 
-return redirect()->back()->with('success', 'Announcement posted successfully!');
-}
+        // 3. Create with current User ID
+        Announcement::create([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'target' => $validated['target'],
+            'user_id' => Auth::id(),
+        ]);
 
-public function destroy(Announcement $announcement)
-{
-// Security check: Only staff/admin can delete
-if (Auth::user()->role === 'student') {
-return redirect()->back()->with('error', 'You do not have permission to delete this.');
-}
+        return redirect()->back()->with('success', 'Announcement posted successfully!');
+    }
 
-$announcement->delete();
+    /**
+     * Remove the specified announcement from storage.
+     */
+    public function destroy(Announcement $announcement)
+    {
+        // Security check: Only staff can delete
+        if (Auth::user()->role === 'student') {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
 
-return redirect()->back()->with('success', 'Announcement deleted!');
-}
+        $announcement->delete();
+
+        return redirect()->back()->with('success', 'Announcement deleted!');
+    }
+
+    // You can leave index(), create(), edit(), etc. out if 
+    // the Dashboard handles those views.
 }

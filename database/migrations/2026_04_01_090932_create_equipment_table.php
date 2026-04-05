@@ -9,13 +9,15 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('location_directions');
-            $table->string('status')->default('available');
+            $table->string('status');
+            $table->integer('quantity');
+            $table->text('description')->nullable();
+            $table->boolean('is_available')->default(true);
             $table->timestamps();
         });
     }

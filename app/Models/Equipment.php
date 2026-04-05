@@ -8,8 +8,18 @@ class Equipment extends Model
 {
     protected $fillable = [
         'name',
-        'model',
         'status',
         'quantity',
+        'description'
     ];
+
+    /**
+     * The experiments that use this equipment.
+     */
+    public function experiments()
+    {
+        return $this->belongsToMany(Experiment::class)
+            ->withPivot('quantity_needed')
+            ->withTimestamps();
+    }
 }

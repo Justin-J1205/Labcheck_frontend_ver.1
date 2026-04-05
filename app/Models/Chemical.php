@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Chemical extends Model
 {
+    use HasFactory;
 
-    protected $fillable =
-    [
+    // CRITICAL: You must add 'formula' to this array!
+    protected $fillable = [
         'name',
         'formula',
         'amount',
-        'description',
-        'safety_info',
-        'is_available'
+        'safety_info'
     ];
 }

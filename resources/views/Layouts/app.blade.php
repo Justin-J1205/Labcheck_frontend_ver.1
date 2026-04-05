@@ -5,90 +5,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LAB-CHECK</title>
+
+    {{-- Core Scripts --}}
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
+
+    {{-- Modern Font --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </head>
 
-<body style="margin: 0; font-family: 'Segoe UI', sans-serif; background: #f8fafc;" x-data="{ sidebarOpen: true }">
+<body class="bg-slate-50 antialiased" x-data="{ sidebarOpen: true }">
 
-    {{-- 1. CLEAN BLUE TOP BAR (No Search) --}}
-    <div
-        style="height: 70px; background: #1e3a8a; display: flex; align-items: center; padding: 0 30px; position: sticky; top: 0; z-index: 100;">
+    {{-- 1. TOP NAVIGATION BAR --}}
+    <header class="h-[70px] bg-[#1e3a8a] flex items-center px-6 sticky top-0 z-[100] shadow-md">
 
-        {{-- LEFT SECTION: Menu + Dynamic Greeting --}}
-        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
-            {{-- MENU TOGGLE --}}
+        <div class="flex items-center gap-6 flex-1">
+            {{-- Sidebar Toggle Button --}}
             <button @click="sidebarOpen = !sidebarOpen"
-                style="background: rgba(255,255,255,0.2); border: none; border-radius: 8px; padding: 8px 15px; color: white; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-                <span x-show="!sidebarOpen">☰</span>
-                <span x-show="sidebarOpen">✕</span>
-                <span>Menu</span>
+                class="bg-white/10 hover:bg-white/20 border-none rounded-xl px-4 py-2 text-white cursor-pointer font-bold flex items-center gap-2 transition-all active:scale-95">
+                <span x-text="sidebarOpen ? '✕' : '☰'"></span>
+                <span class="hidden sm:inline text-xs uppercase tracking-widest">Menu</span>
             </button>
 
-            {{-- DYNAMIC GREETING WITH FALLBACK --}}
-            <div style="color: white; font-size: 16px; white-space: nowrap;">
-                Good day,
-                <span style="font-weight: 700;">
-                    {{ Auth::user()->full_name ?? 'User' }}
-                </span>! 
+            {{-- Clean Text Greeting --}}
+            <div class="flex items-center text-white border-l border-white/20 ml-2 pl-6 h-8">
+                <div class="text-sm">
+                    <span class="opacity-70 font-medium italic">Good day,</span>
+                    <span class="font-bold tracking-tight text-teal-300 ml-1">
+                        {{ Auth::user()->full_name ?? 'User' }}!
+                    </span>
+                </div>
             </div>
         </div>
 
-    </div>
-    <div style="display: flex; height: calc(100vh - 70px);">
-        {{-- 2. THE SIDEBAR (Toggleable) --}}
-        <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
-            style="width: 260px; background: white; border-right: 1px solid #e2e8f0; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0;">
+    </header>
 
-            <div style="margin-bottom: 40px;">
-                <h1 style="color: #0d9488; font-weight: 800; font-size: 22px; margin: 0;">LAB-CHECK</h1>
+    <div class="flex h-[calc(100vh-70px)]">
+
+        {{-- 2. THE SIDEBAR (Collapsible) --}}
+        <aside x-show="sidebarOpen" x-cloak x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0"
+            x-transition:leave-end="-translate-x-full"
+            class="w-[260px] bg-white border-r border-slate-200 p-8 flex flex-col shrink-0 z-40">
+
+            {{-- Sidebar Branding --}}
+            <div class="mb-10">
+                <h1 class="text-[#0d9488] font-black text-2xl tracking-tighter">LAB-CHECK</h1>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[2px] mt-1">Inventory System</p>
             </div>
 
-            <nav style="flex-grow: 1;">
-                <ul style="list-style: none; padding: 0; margin: 0;">
-                    <li style="margin-bottom: 8px;">
-                        <a href="{{ route('dashboard') }}"
-                            style="display: block; padding: 12px 15px; border-radius: 12px; text-decoration: none; font-weight: 600; color: {{ Request::is('dashboard') ? '#0d9488' : '#64748b' }}; background: {{ Request::is('dashboard') ? '#f0fdfa' : 'transparent' }};">
-                            Home
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 8px;">
-                        <a href="{{ route('experiments.index') }}"
-                            style="display: block; padding: 12px 15px; border-radius: 12px; text-decoration: none; font-weight: 600; color: {{ Request::is('experiments*') ? '#0d9488' : '#64748b' }}; background: {{ Request::is('experiments*') ? '#f0fdfa' : 'transparent' }};">
-                            Experiments
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 8px;">
-                        <a href="{{ route('catalog.index') }}"
-                            style="display: block; padding: 12px 15px; border-radius: 12px; text-decoration: none; font-weight: 600; color: {{ Request::is('catalog*') ? '#0d9488' : '#64748b' }}; background: {{ Request::is('catalog*') ? '#f0fdfa' : 'transparent' }};">
-                            Catalog
-                        </a>
-                    </li>
-                    <li style="margin-bottom: 8px;">
-                        <a href="{{ route('equipment.index') }}"
-                            style="display: block; padding: 12px 15px; border-radius: 12px; text-decoration: none; font-weight: 600; color: {{ Request::is('equipment*') ? '#0d9488' : '#64748b' }}; background: {{ Request::is('equipment*') ? '#f0fdfa' : 'transparent' }};">
-                            Equipment
-                        </a>
-                    </li>
+            {{-- Navigation Links --}}
+            <nav class="flex-grow">
+                <ul class="space-y-1.5 p-0 m-0 list-none">
+                    @php
+                        $navItems = [
+                            ['route' => 'dashboard', 'label' => 'Home', 'pattern' => 'dashboard'],
+                            ['route' => 'experiments.index', 'label' => 'Experiments', 'pattern' => 'experiments*'],
+                            ['route' => 'catalog.index', 'label' => 'Catalog', 'pattern' => 'catalog*'],
+                            // FIXED: Added 's' to route and pattern to match web.php resource
+                            ['route' => 'equipments.index', 'label' => 'Equipment', 'pattern' => 'equipments*'],
+                        ];
+                    @endphp
+
+                    @foreach ($navItems as $item)
+                        <li>
+                            <a href="{{ route($item['route']) }}"
+                                class="flex items-center px-4 py-3 rounded-xl no-underline font-bold transition-all duration-200 
+                            {{ Request::is($item['pattern'])
+                                ? 'bg-teal-50 text-teal-700 shadow-sm'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                                {{ $item['label'] }}
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </nav>
 
-            <div style="margin-top: auto;">
+            {{-- Sign Out Button --}}
+            <div class="pt-6 border-t border-slate-100">
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit"
-                        style="color: #ef4444; font-weight: 700; background: none; border: none; cursor: pointer; padding: 10px 15px; width: 100%; text-align: left;">
-                        Log out
+                        class="flex items-center gap-2 w-full px-4 py-3 text-red-500 font-extrabold bg-transparent border-none cursor-pointer hover:bg-red-50 rounded-xl transition-colors text-sm uppercase tracking-widest">
+                        Logout
                     </button>
                 </form>
             </div>
-        </div>
+        </aside>
 
         {{-- 3. MAIN CONTENT AREA --}}
-        <div style="flex-grow: 1; overflow-y: auto; background: #f8fafc;">
-            @yield('content')
-        </div>
+        <main class="flex-grow overflow-y-auto bg-slate-50">
+            <div class="p-0">
+                @yield('content')
+            </div>
+        </main>
     </div>
 
 </body>
