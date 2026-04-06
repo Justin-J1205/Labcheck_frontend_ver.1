@@ -1,7 +1,7 @@
 @extends('Layouts.app')
 
 @section('content')
-    {{-- Main wrapper with UIC styling --}}
+    {{-- Main wrapper --}}
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-10">
 
         <div class="space-y-8" x-data="{

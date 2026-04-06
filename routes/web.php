@@ -9,6 +9,7 @@ use App\Http\Controllers\ExperimentController;
 use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ChemicalController;
+use App\Http\Controllers\StaffUserController;
 
 // --- 1. PUBLIC ROUTES ---
 Route::get('/', fn() => view('welcome'));
@@ -42,4 +43,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('catalog', ChemicalController::class);
     Route::patch('/catalog/{chemical}/toggle', [ChemicalController::class, 'toggleStatus'])->name('catalog.toggle');
+
+    // STUDENT JOIN AND LEAVE
+
+    Route::post('/experiments/{experiment}/join', [ExperimentController::class, 'join'])->name('experiments.join');
+    Route::delete('/experiments/{experiment}/leave', [ExperimentController::class, 'leave'])->name('experiments.leave');
+
+    // REMOVES STUDENTS (STAFFs ONLY)
+
+    Route::middleware(['auth'])->group(function () {
+        Route::delete('/staff/users/{user}', [StaffUserController::class, 'destroy'])->name('staff.users.destroy');
+        Route::get('/staff/users', [StaffUserController::class, 'index'])->name('staff.users.index');
+        Route::delete('/staff/users/{user}', [StaffUserController::class, 'destroy'])->name('staff.users.destroy');
+    });
 });

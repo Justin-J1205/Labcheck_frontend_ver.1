@@ -2,7 +2,7 @@
 
 @section('content')
     <div style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
-        {{-- FIXED: Changed 'equipment.index' to 'equipments.index' --}}
+
         <a href="{{ route('equipments.index') }}"
             style="color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600;">
             ← Back to Equipment List

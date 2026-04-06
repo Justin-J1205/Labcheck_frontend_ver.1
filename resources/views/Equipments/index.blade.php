@@ -11,7 +11,7 @@
             </div>
 
             @if (Auth::user()->role !== 'student')
-                {{-- FIXED: Changed equipment.create to equipments.create --}}
+
                 <a href="{{ route('equipments.create') }}"
                     class="bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-xl no-underline font-semibold transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-teal-100 text-center">
                     + Add Equipment
@@ -31,7 +31,6 @@
                             {{ $item->category ?? 'Hardware' }}
                         </span>
 
-                        {{-- FIXED: Changed equipment.show to equipments.show --}}
                         <a href="{{ route('equipments.show', $item->id) }}" class="group no-underline">
                             <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-teal-600 transition-colors">
                                 {{ $item->name }}

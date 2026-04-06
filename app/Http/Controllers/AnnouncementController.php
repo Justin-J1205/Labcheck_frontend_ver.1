@@ -10,7 +10,6 @@ class AnnouncementController extends Controller
 {
     /**
      * Store a newly created announcement in storage.
-     * Triggered by the '+ New Announcement' modal on your dashboard.
      */
     public function store(Request $request)
     {
@@ -51,7 +50,4 @@ class AnnouncementController extends Controller
 
         return redirect()->back()->with('success', 'Announcement deleted!');
     }
-
-    // You can leave index(), create(), edit(), etc. out if 
-    // the Dashboard handles those views.
 }

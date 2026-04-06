@@ -27,7 +27,7 @@
                 </div>
             </div>
 
-            {{-- NEW: Requirements Section --}}
+            {{-- Requirements Section --}}
             <div
                 style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 40px; border-top: 1px solid #f1f5f9; padding-top: 30px;">
                 {{-- Equipment List --}}
@@ -74,15 +74,38 @@
                 {{ $experiment->description }}
             </p>
 
-            {{-- Student Join Button --}}
+            {{-- Student Action Section --}}
             @if (Auth::user()->role === 'student')
-                <form action="{{ route('experiments.join', $experiment->id) }}" method="POST">
-                    @csrf
-                    <button type="submit"
-                        style="width: 100%; padding: 18px; background: #3b82f6; color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);">
-                        🚀 Join Experiment & Add to My Schedule
-                    </button>
-                </form>
+                <div style="margin-top: 30px;">
+                    @if (Auth::user()->experiments->contains($experiment->id))
+                        {{-- Already Joined State --}}
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <div
+                                style="flex: 1; padding: 18px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; border-radius: 16px; font-weight: 700; text-align: center; font-size: 16px;">
+                                ✅ You are enrolled in this experiment
+                            </div>
+
+                            <form action="{{ route('experiments.leave', $experiment->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                    style="padding: 18px 25px; background: #fee2e2; color: #ef4444; border: none; border-radius: 16px; font-weight: 700; cursor: pointer; transition: 0.3s;"
+                                    onclick="return confirm('Are you sure you want to leave this experiment?')">
+                                    Leave
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        {{-- Not Joined State --}}
+                        <form action="{{ route('experiments.join', $experiment->id) }}" method="POST">
+                            @csrf
+                            <button type="submit"
+                                style="width: 100%; padding: 18px; background: #3b82f6; color: white; border: none; border-radius: 16px; font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);">
+                                🚀 Join Experiment & Add to My Schedule
+                            </button>
+                        </form>
+                    @endif
+                </div>
             @endif
         </div>
     </div>

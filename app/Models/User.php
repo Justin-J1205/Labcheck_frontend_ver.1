@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,12 +18,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'full_name',
-    'email',
-    'date_of_birth',
-    'password',
-    'role',
-];
+        'full_name',
+        'email',
+        'date_of_birth',
+        'password',
+        'role',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -47,5 +46,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * The experiments that the student has joined.
+     */
+    public function experiments()
+    {
+        return $this->belongsToMany(Experiment::class, 'experiment_user')
+            ->withTimestamps();
+    }
+
+    public function users()
+    {
+        // This links to the 'experiment_user' table
+        return $this->belongsToMany(User::class, 'experiment_user')
+            ->withTimestamps();
     }
 }

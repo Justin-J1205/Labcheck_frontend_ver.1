@@ -20,7 +20,7 @@ class Experiment extends Model
     public function equipments()
     {
         return $this->belongsToMany(Equipment::class)
-            ->withPivot('quantity_needed') // Prepare for the future!
+            ->withPivot('quantity_needed')
             ->withTimestamps();
     }
 
@@ -29,6 +29,12 @@ class Experiment extends Model
     {
         return $this->belongsToMany(Chemical::class)
             ->withPivot('amount_needed')
+            ->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'experiment_user')
             ->withTimestamps();
     }
 }

@@ -47,7 +47,7 @@
                     style="display: block; margin-bottom: 8px; font-weight: 700; color: #334155; font-size: 14px;">
                     Description & Safety Info
                 </label>
-                {{-- FIXED: Changed name="description" to name="safety_info" to match your Controller --}}
+
                 <textarea name="safety_info" id="safety_info" rows="3"
                     style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 15px; outline-color: #0d9488; resize: none;"
                     placeholder="e.g., Highly flammable, store in a cool dry place.">{{ old('safety_info') }}</textarea>

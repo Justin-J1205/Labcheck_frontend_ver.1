@@ -73,7 +73,6 @@
                             ['route' => 'dashboard', 'label' => 'Home', 'pattern' => 'dashboard'],
                             ['route' => 'experiments.index', 'label' => 'Experiments', 'pattern' => 'experiments*'],
                             ['route' => 'catalog.index', 'label' => 'Catalog', 'pattern' => 'catalog*'],
-                            // FIXED: Added 's' to route and pattern to match web.php resource
                             ['route' => 'equipments.index', 'label' => 'Equipment', 'pattern' => 'equipments*'],
                         ];
                     @endphp

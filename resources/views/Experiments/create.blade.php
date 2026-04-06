@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                {{-- NEW: Equipment Selection Section --}}
+                {{-- Equipment Selection Section --}}
                 <div
                     style="margin-bottom: 20px; padding: 20px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0;">
                     <label
@@ -69,6 +69,7 @@
                                     <span style="font-size: 14px; color: #334155;">{{ $equipment->name }} <small
                                             style="color: #64748b;">(Stock: {{ $equipment->quantity }})</small></span>
                                 </div>
+                                {{-- Updated Name to include ID --}}
                                 <input type="number" name="equipment_quantities[{{ $equipment->id }}]" min="1"
                                     placeholder="Qty"
                                     style="width: 60px; padding: 6px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 13px;">
@@ -77,7 +78,7 @@
                     </div>
                 </div>
 
-                {{-- NEW: Chemical Selection Section --}}
+                {{-- Chemical Selection Section --}}
                 <div
                     style="margin-bottom: 30px; padding: 20px; border-radius: 16px; background: #f8fafc; border: 1px solid #e2e8f0;">
                     <label
@@ -95,6 +96,7 @@
                                             left)</small></span>
                                 </div>
                                 <div style="display: flex; align-items: center; gap: 4px;">
+                                    {{-- Updated Name to include ID --}}
                                     <input type="number" name="chemical_amounts[{{ $chemical->id }}]" min="1"
                                         placeholder="Amt"
                                         style="width: 60px; padding: 6px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 13px;">

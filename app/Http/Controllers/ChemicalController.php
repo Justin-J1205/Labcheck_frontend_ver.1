@@ -14,7 +14,6 @@ class ChemicalController extends Controller
     public function index()
     {
         $chemicals = Chemical::all();
-        // FIXED: Ensuring path matches your folder structure 'resources/views/Catalog'
         return view('Catalog.index', compact('chemicals'));
     }
 
@@ -48,7 +47,6 @@ class ChemicalController extends Controller
 
     /**
      * Show the Edit Form.
-     * FIXED: Changed parameter to $catalog to match route resource name
      */
     public function edit(Chemical $catalog)
     {
@@ -58,7 +56,6 @@ class ChemicalController extends Controller
 
     /**
      * Update the Chemical details.
-     * FIXED: Changed parameter to $catalog to match route resource name
      */
     public function update(Request $request, Chemical $catalog)
     {
@@ -77,8 +74,7 @@ class ChemicalController extends Controller
     }
 
     /**
-     * Custom logic for toggling availability.
-     * FIXED: Changed parameter to $catalog to match route resource name
+     * Updates Status
      */
     public function toggleStatus(Chemical $catalog)
     {
@@ -92,8 +88,7 @@ class ChemicalController extends Controller
     }
 
     /**
-     * Remove the chemical (Staff Only).
-     * FIXED: Changed parameter to $catalog so Laravel finds the ID correctly
+     * Removes a Chemical
      */
     public function destroy(Chemical $catalog)
     {

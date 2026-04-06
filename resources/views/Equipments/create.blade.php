@@ -2,7 +2,7 @@
 
 @section('content')
     <div style="padding: 40px 20px; max-width: 700px; margin: 0 auto;">
-        {{-- FIXED: Changed 'equipment.index' to 'equipments.index' to match your resource routes --}}
+
         <a href="{{ route('equipments.index') }}"
             style="text-decoration: none; color: #64748b; font-size: 14px; display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
             ← Back to Equipment List
@@ -18,7 +18,6 @@
             <p style="color: #64748b; margin-bottom: 30px; font-size: 15px;">Manage and track all laboratory equipment
                 assets.</p>
 
-            {{-- FIXED: Changed 'equipment.store' to 'equipments.store' --}}
             <form action="{{ route('equipments.store') }}" method="POST">
                 @csrf
 
@@ -75,7 +74,6 @@
                         Save Equipment
                     </button>
 
-                    {{-- FIXED: Changed 'equipment.index' to 'equipments.index' --}}
                     <a href="{{ route('equipments.index') }}"
                         style="flex: 1; text-align: center; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; text-decoration: none; color: #64748b; font-weight: 600; font-size: 16px;">
                         Cancel

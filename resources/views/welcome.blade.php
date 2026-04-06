@@ -32,7 +32,7 @@
 
             <p class="text-lg lg:text-xl text-teal-50/90 leading-relaxed mb-10 font-medium">
                 Step into a smarter, safer, and more efficient laboratory. From real-time chemical tracking to seamless
-                equipment booking, we provide the tools you need at <span
+                equipment booking, we provide the tools you need. <span
                     class="text-white font-bold underline decoration-teal-400">UIC</span>.
             </p>
 
