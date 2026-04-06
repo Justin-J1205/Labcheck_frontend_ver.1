@@ -21,11 +21,12 @@ class StaffUserController extends Controller
         /** @var \App\Models\User $currentUser */
         $currentUser = Auth::user();
 
+        /** 
         // Check if the person clicking 'Delete' is actually a staff member
         if (auth()->user()->role !== 'staff') {
             abort(403, 'Only lab staff can remove users.');
         }
-
+         */
         $user->delete();
         return redirect()->back()->with('success', 'Student removed successfully.');
     }
