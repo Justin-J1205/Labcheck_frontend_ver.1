@@ -18,20 +18,20 @@ class ChemicalController extends Controller
     }
 
     /**
-     * Show the form to add a new chemical (Staff Only).
+     * Show the form to add a new chemical (Staff/Admin Only).
      */
     public function create()
     {
-        if (Auth::user()->role !== 'staff') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
         return view('Catalog.create');
     }
 
     /**
-     * Save the new chemical (Staff Only).
+     * Save the new chemical (Staff/Admin Only).
      */
     public function store(Request $request)
     {
-        if (Auth::user()->role !== 'staff') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
 
         $validated = $request->validate([
             'name' => 'required|string',
@@ -50,7 +50,7 @@ class ChemicalController extends Controller
      */
     public function edit(Chemical $catalog)
     {
-        if (Auth::user()->role !== 'staff') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
         return view('Catalog.edit', ['chemical' => $catalog]);
     }
 
@@ -59,7 +59,7 @@ class ChemicalController extends Controller
      */
     public function update(Request $request, Chemical $catalog)
     {
-        if (Auth::user()->role !== 'staff') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
 
         $validated = $request->validate([
             'name' => 'required|string',
@@ -78,7 +78,7 @@ class ChemicalController extends Controller
      */
     public function toggleStatus(Chemical $catalog)
     {
-        if (Auth::user()->role !== 'staff') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
 
         $catalog->update([
             'is_available' => !$catalog->is_available
@@ -92,7 +92,7 @@ class ChemicalController extends Controller
      */
     public function destroy(Chemical $catalog)
     {
-        if (Auth::user()->role !== 'staff') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
 
         $catalog->delete();
 

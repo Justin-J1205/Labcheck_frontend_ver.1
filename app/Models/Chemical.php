@@ -14,6 +14,7 @@ class Chemical extends Model
         'name',
         'formula',
         'amount',
-        'safety_info'
+        'safety_info',
+        'is_available'
     ];
 }

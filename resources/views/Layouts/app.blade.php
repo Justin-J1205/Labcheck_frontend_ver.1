@@ -86,6 +86,44 @@
                             </a>
                         </li>
                     @endforeach
+
+                    {{-- Admin Section --}}
+                    @if(Auth::user()->role === 'staff' || Auth::user()->role === 'admin')
+                        <li class="mt-6 pt-6 border-t border-slate-200">
+                            <p class="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-[1px]">Admin</p>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.users.index') }}"
+                                class="flex items-center px-4 py-3 rounded-xl no-underline font-bold transition-all duration-200 
+                            {{ Request::is('admin/users*')
+                                ? 'bg-teal-50 text-teal-700 shadow-sm'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                                Users
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('borrow-requests.index') }}"
+                                class="flex items-center px-4 py-3 rounded-xl no-underline font-bold transition-all duration-200 
+                            {{ Request::is('borrow-requests*')
+                                ? 'bg-teal-50 text-teal-700 shadow-sm'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                                Borrow Requests
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Student Section --}}
+                    @if(Auth::user()->role === 'student')
+                        <li class="mt-6 pt-6 border-t border-slate-200">
+                            <a href="{{ route('borrow-requests.history') }}"
+                                class="flex items-center px-4 py-3 rounded-xl no-underline font-bold transition-all duration-200 
+                            {{ Request::is('borrow-requests/history')
+                                ? 'bg-teal-50 text-teal-700 shadow-sm'
+                                : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">
+                                My Borrowing History
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </nav>
 

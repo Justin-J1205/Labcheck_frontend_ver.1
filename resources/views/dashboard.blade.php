@@ -12,10 +12,6 @@
             </div>
 
             @if (Auth::user()->role !== 'student')
-                <button @click="showUserModal = true"
-                    style="background: #f1f5f9; color: #475569; padding: 12px 24px; border-radius: 12px; border: 1px solid #e2e8f0; font-weight: 700; cursor: pointer;">
-                    👥 Manage Students
-                </button>
                 <button @click="showModal = true"
                     style="background: #0d9488; color: white; padding: 12px 24px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.2);">
                     + New Announcement
@@ -121,7 +117,7 @@
 
         {{-- THE ANNOUNCEMENT --}}
         <div x-show="showModal" x-cloak
-            style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); display: flex; align-items: center; justify-content: center; z-index: 50;">
+            style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); display: flex; align-items: flex-start; justify-content: center; z-index: 50; padding-top: 200px; overflow-y: auto;">
             <div @click.away="showModal = false"
                 style="background: white; width: 100%; max-width: 500px; border-radius: 24px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
                 <h2 style="margin-top: 0; margin-bottom: 25px; color: #1e293b;">Create New Announcement</h2>

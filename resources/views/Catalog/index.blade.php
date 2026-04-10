@@ -62,7 +62,7 @@
                                 </td>
 
                                 <td class="px-8 py-5 text-center">
-                                    @if (auth()->user()->role === 'staff')
+                                    @if (auth()->user()->role === 'staff' || auth()->user()->role === 'admin')
                                         {{-- Toggle Availability --}}
                                         <form action="{{ route('catalog.toggle', $chemical->id) }}" method="POST"
                                             @click.stop>
@@ -85,17 +85,28 @@
                                 </td>
 
                                 <td class="px-8 py-5 text-right">
-                                    @if (auth()->user()->role === 'staff')
-                                        {{-- Delete Form --}}
-                                        <div class="inline-block">
-                                            {{-- @click.stop prevents the row click from firing when deleting --}}
+                                    <div class="flex gap-2 justify-end items-center">
+                                        @if (auth()->user()->role === 'staff' || auth()->user()->role === 'admin')
+                                            {{-- Edit Button --}}
+                                            <a href="{{ route('catalog.edit', $chemical->id) }}"
+                                                @click.stop
+                                                class="p-2 text-orange-500 hover:text-orange-700 transition-colors duration-200"
+                                                title="Edit">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </a>
+                                            {{-- Delete Form --}}
                                             <form action="{{ route('catalog.destroy', $chemical->id) }}" method="POST"
                                                 @click.stop
-                                                onsubmit="return confirm('Are you sure you want to delete {{ $chemical->name }}?');">
+                                                onsubmit="return confirm('Are you sure you want to delete {{ $chemical->name }}?');"
+                                                class="inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                    class="p-2 text-gray-400 hover:text-red-600 transition-colors duration-200">
+                                                    class="p-2 text-gray-400 hover:text-red-600 transition-colors duration-200"
+                                                    title="Delete">
                                                     <svg class="w-5 h-5" fill="none" stroke="currentColor"
                                                         viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -104,8 +115,15 @@
                                                     </svg>
                                                 </button>
                                             </form>
-                                        </div>
-                                    @endif
+                                        @else
+                                            {{-- Request Button for Students --}}
+                                            <a href="{{ route('borrow-requests.create', ['type' => 'chemical', 'id' => $chemical->id]) }}"
+                                                @click.stop
+                                                class="px-4 py-2 text-sm text-teal-600 border border-teal-600 rounded-lg hover:bg-teal-50 transition-colors duration-200 font-bold">
+                                                Request
+                                            </a>
+                                        @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -121,8 +139,8 @@
         </div>
     </div>
 
-    {{-- Floating Action Button for Staff --}}
-    @if (auth()->user()->role === 'staff')
+    {{-- Floating Action Button for Staff/Admin --}}
+    @if (auth()->user()->role === 'staff' || auth()->user()->role === 'admin')
         <a href="{{ route('catalog.create') }}"
             class="fixed bottom-8 right-8 z-50 inline-flex items-center justify-center p-4 bg-teal-600 hover:bg-teal-700 text-white rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 group">
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
