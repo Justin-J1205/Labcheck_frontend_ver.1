@@ -61,6 +61,15 @@
                         style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; min-height: 100px; font-size: 15px; resize: none;">{{ old('description', $equipment->description) }}</textarea>
                 </div>
 
+                {{-- Available Checkbox --}}
+                <div style="margin-bottom: 30px;">
+                    <label style="display: flex; align-items: center; gap: 10px; font-weight: 600; color: #334155; font-size: 14px; cursor: pointer;">
+                        <input type="checkbox" name="is_available" value="1" {{ old('is_available', $equipment->is_available) ? 'checked' : '' }}
+                            style="width: 18px; height: 18px; cursor: pointer;">
+                        Available for borrowing
+                    </label>
+                </div>
+
                 <div style="display: flex; gap: 15px;">
                     <button type="submit"
                         style="flex: 2; padding: 14px; border-radius: 12px; background: #0d9488; color: white; border: none; font-weight: 700; cursor: pointer; font-size: 16px;">

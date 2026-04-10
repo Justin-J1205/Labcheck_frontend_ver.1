@@ -10,6 +10,8 @@ use App\Http\Controllers\AnnouncementController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ChemicalController;
 use App\Http\Controllers\StaffUserController;
+use App\Http\Controllers\BorrowRequestController;
+use App\Http\Controllers\AdminUserController;
 
 // --- 1. PUBLIC ROUTES ---
 Route::get('/', fn() => view('welcome'));
@@ -44,16 +46,29 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('catalog', ChemicalController::class);
     Route::patch('/catalog/{chemical}/toggle', [ChemicalController::class, 'toggleStatus'])->name('catalog.toggle');
 
-    // STUDENT JOIN AND LEAVE
+    // BORROW REQUESTS (STUDENT: Request Material, ADMIN: Approve/Reject)
+    Route::get('/borrow-requests', [BorrowRequestController::class, 'index'])->name('borrow-requests.index');
+    Route::get('/borrow-requests/create', [BorrowRequestController::class, 'create'])->name('borrow-requests.create');
+    Route::post('/borrow-requests', [BorrowRequestController::class, 'store'])->name('borrow-requests.store');
+    Route::post('/borrow-requests/{borrowRequest}/approve', [BorrowRequestController::class, 'approve'])->name('borrow-requests.approve');
+    Route::post('/borrow-requests/{borrowRequest}/reject', [BorrowRequestController::class, 'reject'])->name('borrow-requests.reject');
+    Route::post('/borrow-requests/{borrowRequest}/return', [BorrowRequestController::class, 'return'])->name('borrow-requests.return');
+    Route::get('/borrow-requests/history', [BorrowRequestController::class, 'history'])->name('borrow-requests.history');
 
+    // ADMIN USERS MANAGEMENT
+    Route::resource('admin/users', AdminUserController::class)->except(['show'])->names([
+        'index' => 'admin.users.index',
+        'create' => 'admin.users.create',
+        'store' => 'admin.users.store',
+        'edit' => 'admin.users.edit',
+        'update' => 'admin.users.update',
+        'destroy' => 'admin.users.destroy'
+    ]);
+
+    // STUDENT JOIN AND LEAVE
     Route::post('/experiments/{experiment}/join', [ExperimentController::class, 'join'])->name('experiments.join');
     Route::delete('/experiments/{experiment}/leave', [ExperimentController::class, 'leave'])->name('experiments.leave');
 
-    // REMOVES STUDENTS (STAFFs ONLY)
-
-    Route::middleware(['auth'])->group(function () {
-        Route::delete('/staff/users/{user}', [StaffUserController::class, 'destroy'])->name('staff.users.destroy');
-        Route::get('/staff/users', [StaffUserController::class, 'index'])->name('staff.users.index');
-        Route::delete('/staff/users/{user}', [StaffUserController::class, 'destroy'])->name('staff.users.destroy');
-    });
+    // REMOVES STUDENTS (STAFF/ADMIN ONLY)
+    Route::delete('/staff/users/{user}', [StaffUserController::class, 'destroy'])->name('staff.users.destroy');
 });

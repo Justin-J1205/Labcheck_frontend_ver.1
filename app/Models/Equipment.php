@@ -16,7 +16,8 @@ class Equipment extends Model
         'name',
         'status',
         'quantity',
-        'description'
+        'description',
+        'is_available'
     ];
 
     /**

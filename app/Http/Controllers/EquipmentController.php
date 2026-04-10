@@ -16,17 +16,20 @@ class EquipmentController extends Controller
 
     public function create()
     {
-        if (Auth::user()->role === 'student') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
         return view('Equipments.create');
     }
 
     public function store(Request $request)
     {
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'status' => 'required|string',
             'quantity' => 'required|integer|min:1',
             'description' => 'nullable|string',
+            'is_available' => 'boolean'
         ]);
 
         Equipment::create($validated);
@@ -42,17 +45,20 @@ class EquipmentController extends Controller
 
     public function edit(Equipment $equipment)
     {
-        if (Auth::user()->role === 'student') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
         return view('Equipments.edit', compact('equipment'));
     }
 
     public function update(Request $request, Equipment $equipment)
     {
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
+
         $validated = $request->validate([
             'name' => 'required|string',
             'status' => 'required|string',
             'quantity' => 'required|integer',
             'description' => 'nullable|string',
+            'is_available' => 'boolean'
         ]);
 
         $equipment->update($validated);
@@ -61,7 +67,7 @@ class EquipmentController extends Controller
 
     public function destroy(Equipment $equipment)
     {
-        if (Auth::user()->role === 'student') abort(403);
+        if (Auth::user()->role !== 'staff' && Auth::user()->role !== 'admin') abort(403);
         $equipment->delete();
         return redirect()->route('equipments.index')->with('success', 'Asset deleted.');
     }

@@ -55,6 +55,10 @@
 
                         @if (Auth::user()->role !== 'student')
                             <div class="flex gap-4 items-center">
+                                <a href="{{ route('equipments.edit', $item->id) }}"
+                                    class="bg-transparent border-none text-orange-500 text-xs font-bold cursor-pointer hover:text-orange-700 transition-colors uppercase tracking-widest no-underline">
+                                    EDIT
+                                </a>
                                 <form action="{{ route('equipments.destroy', $item->id) }}" method="POST"
                                     onsubmit="return confirm('Remove this equipment?');">
                                     @csrf
@@ -65,6 +69,13 @@
                                     </button>
                                 </form>
                             </div>
+                        @else
+                            @if ($item->is_available && $item->quantity > 0)
+                                <a href="{{ route('borrow-requests.create', ['type' => 'equipment', 'id' => $item->id]) }}"
+                                    class="bg-transparent border-none text-teal-600 text-xs font-bold cursor-pointer hover:text-teal-700 transition-colors uppercase tracking-widest no-underline">
+                                    REQUEST
+                                </a>
+                            @endif
                         @endif
                     </div>
                 </div>

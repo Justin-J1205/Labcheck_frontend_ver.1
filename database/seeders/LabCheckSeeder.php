@@ -47,18 +47,11 @@ class LabCheckSeeder extends Seeder
         ];
 
         foreach ($chemicals as $c) {
-            $id = DB::table('chemicals')->insertGetId([
+            DB::table('chemicals')->insert([
                 'name' => $c['name'],
                 'formula' => $c['formula'],
-                'description' => "Standard laboratory grade {$c['name']}.",
+                'amount' => $c['qty'],
                 'safety_info' => $c['safety'],
-                'created_at' => now(),
-            ]);
-
-            DB::table('stocks')->insert([
-                'chemical_id' => $id,
-                'quantity' => $c['qty'],
-                'unit' => $c['unit'],
                 'is_available' => $c['qty'] > 0,
                 'created_at' => now(),
             ]);
@@ -66,18 +59,20 @@ class LabCheckSeeder extends Seeder
 
         // --- 3. EQUIPMENT ---
         $equipmentItems = [
-            ['name' => 'Compound Microscope 04', 'loc' => 'Shelf A, Room 302', 'status' => 'available'],
-            ['name' => 'Digital Centrifuge', 'loc' => 'Bench 2, Room 302', 'status' => 'maintenance'],
-            ['name' => 'Bunsen Burner Set 01', 'loc' => 'Cabinet 05', 'status' => 'available'],
-            ['name' => 'Spectrophotometer', 'loc' => 'Dark Room 101', 'status' => 'available'],
-            ['name' => 'Analytical Balance', 'loc' => 'Weighing Room', 'status' => 'available'],
+            ['name' => 'Compound Microscope 04', 'desc' => 'Optics Grade Microscope with 400x magnification', 'status' => 'available', 'qty' => 1],
+            ['name' => 'Digital Centrifuge', 'desc' => 'High-speed centrifuge for lab samples', 'status' => 'maintenance', 'qty' => 1],
+            ['name' => 'Bunsen Burner Set 01', 'desc' => 'Complete set with tripod and clay triangle', 'status' => 'available', 'qty' => 3],
+            ['name' => 'Spectrophotometer', 'desc' => 'UV-Vis spectrophotometer for absorbance measurements', 'status' => 'available', 'qty' => 1],
+            ['name' => 'Analytical Balance', 'desc' => 'Precision balance with 0.0001g accuracy', 'status' => 'available', 'qty' => 1],
         ];
 
         foreach ($equipmentItems as $item) {
             DB::table('equipment')->insert([
                 'name' => $item['name'],
-                'location_directions' => $item['loc'],
+                'description' => $item['desc'],
                 'status' => $item['status'],
+                'quantity' => $item['qty'],
+                'is_available' => $item['status'] === 'available',
                 'created_at' => now(),
             ]);
         }
@@ -120,7 +115,7 @@ class LabCheckSeeder extends Seeder
                 'category' => $exp['cat'],
                 'difficulty' => $exp['diff'],
                 'duration_minutes' => $exp['dur'],
-                'procedure_steps' => json_encode($exp['steps']),
+                'description' => implode(' → ', $exp['steps']),
                 'created_at' => now(),
             ]);
 
