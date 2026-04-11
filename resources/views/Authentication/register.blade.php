@@ -83,7 +83,7 @@
                     Address</label>
                 <input type="email" name="email" value="{{ old('email') }}"
                     class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10 transition-all placeholder:text-slate-300"
-                    placeholder="example@uic.edu.ph" required>
+                    placeholder="example@email.com" required>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
