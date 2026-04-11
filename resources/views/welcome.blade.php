@@ -32,20 +32,19 @@
 
             <p class="text-lg lg:text-xl text-teal-50/90 leading-relaxed mb-10 font-medium">
                 Step into a smarter, safer, and more efficient laboratory. From real-time chemical tracking to seamless
-                equipment booking, we provide the tools you need. <span
-            </p>
+                equipment booking, we provide the tools you need. <span </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <a href="/login"
-                    class="inline-flex items-center justify-center px-10 py-5 bg-white text-[#004d4d] rounded-2xl font-black text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-95 group">
-                    Get Started
-                    <svg class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </a>
-            </div>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="/login"
+                            class="inline-flex items-center justify-center px-10 py-5 bg-white text-[#004d4d] rounded-2xl font-black text-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-95 group">
+                            Get Started
+                            <svg class="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
+                    </div>
         </div>
 
         <div class="flex-1 w-full lg:w-auto group">
@@ -57,8 +56,8 @@
 
                 {{-- The Image Card with Glass Border --}}
                 <div
-                    class="relative bg-white/10 backdrop-blur-sm p-2 lg:p-3 rounded-[35px] border border-white/20 shadow-2xl overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:rotate-1">
-                    <img src="{{ asset('images/LAB-CHECK.png') }}" alt="UIC Laboratory"
+                    class="relative bg-white/10 backdrop-blur-sm p-2 lg:p-3 rounded-[35px] border border-white/20 shadow-2xl overflow-hidden transform transition-all duration-500 group-hover:scale-[1.05] group-hover:-translate-y-3">
+                    <img src="{{ asset('images/LAB-CHECK.png') }}" alt="LAB-CHECK logo here"
                         class="w-full h-[300px] lg:h-[500px] object-cover rounded-[28px] shadow-inner">
                 </div>
             </div>
